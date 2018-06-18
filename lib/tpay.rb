@@ -37,6 +37,12 @@ module Tpay
     valid_ip?(ip) && transaction[:md5sum] == md5sum
 	end
 
+  # Checks request ip is in whitelist
+  def self.valid_ip?(ip)
+    ['195.149.229.109', '148.251.96.163', '178.32.201.77', 
+     '46.248.167.59', '46.29.19.106', '176.119.38.175'].member?(ip)
+  end
+
 	def self.configured?
     self.id.present? && self.security_code.present?
   end
@@ -77,14 +83,8 @@ module Tpay
                                         transaction[:tr_crc],
                                         security_code
                                       ].join)
-      valid_ip?(ip) && transaction[:md5sum] == md5sum
+      Tpay.valid_ip?(ip) && transaction[:md5sum] == md5sum
     end
-
-    def self.valid_ip?(ip)
-      ['195.149.229.109', '148.251.96.163', '178.32.201.77', 
-       '46.248.167.59', '46.29.19.106', '176.119.38.175'].member?(ip)
-    end
-
 
     def configured?
       id.present? && security_code.present?
